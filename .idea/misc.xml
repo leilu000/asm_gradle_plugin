@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/projects/android/others/ASM_GRADLE_PLUGIN/app/src/main/res/drawable/br_bg_confession_gift_blue_bg.xml" value="0.175" />
         <entry key="..\:/projects/android/others/ASM_GRADLE_PLUGIN/app/src/main/res/layout/activity_main.xml" value="0.315625" />
+        <entry key="..\:/projects/android/others/ASM_GRADLE_PLUGIN/app/src/main/res/layout/br_confession_gift_message_item.xml" value="0.33" />
       </map>
     </option>
   </component>

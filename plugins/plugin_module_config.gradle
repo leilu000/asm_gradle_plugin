@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-apply from: "../publish_script.gradle"
+apply from: "${rootDir}/plugins/publish_script.gradle"
 repositories {
     mavenCentral()
     mavenLocal()

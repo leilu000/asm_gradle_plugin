@@ -14,7 +14,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/plugins" />
             <option value="$PROJECT_DIR$/plugins/base" />
-            <option value="$PROJECT_DIR$/plugins/mylibrary" />
+            <option value="$PROJECT_DIR$/plugins/method_hook_plugin" />
+            <option value="$PROJECT_DIR$/plugins/method_hook_plugin/method_hook" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

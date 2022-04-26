@@ -1,4 +1,4 @@
 rootProject.name = "ASM_GRADLE_PLUGIN"
 include ':app'
 include ':plugins:base'
-include ':plugins:mylibrary'
+include ':plugins:method_hook_plugin:method_hook'
