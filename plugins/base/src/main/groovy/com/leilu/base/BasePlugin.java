@@ -39,7 +39,6 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
     private boolean mIsIncremental;
     private final WaitableExecutor mExecuter = WaitableExecutor.useGlobalSharedThreadPool();
     private String mModuleName;
-    private boolean mLast;
 
     @Override
     public void apply(Project project) {
@@ -59,11 +58,6 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
 
             mIsAppModule = extension instanceof AppExtension;
             extension.registerTransform(this);
-
-            project.afterEvaluate(project1 -> {
-                System.out.println("00000000000000000000:" + mExtension + "   mLast:" + mLast);
-                mLast = mExtension.enable;
-            });
         }
     }
 
