@@ -1,0 +1,30 @@
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            //配置插件发布的路径（包结构），classpath配置时需要
+            groupId = "com.leilu.asm.plugins"
+            artifactId = "${project.name}"
+            version = "${asm_plugin_version}"
+            from components.java
+        }
+    }
+    //配置仓库目录
+    repositories {
+        maven {
+            // 将插件打包发布到下面目录，如果需要发布到外网仓库只需修改为仓库地址
+            url uri("${rootDir}/plugins/repos")
+        }
+    }
+}

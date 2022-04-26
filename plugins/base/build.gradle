@@ -1,0 +1,23 @@
+apply plugin: 'groovy'
+apply from: "../publish_script.gradle"
+
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:4.2.0'
+    implementation files('libs/asm-9.1.jar')
+    implementation files('libs/asm-tree-7.1.jar')
+    implementation files('libs/asm-tree-7.1-sources.jar')
+
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

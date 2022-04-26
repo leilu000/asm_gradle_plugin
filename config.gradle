@@ -1,0 +1,15 @@
+ext {
+    config = [
+            compileSdkVersion: 31,        // 编译Sdk版本
+            buildToolsVersion: '30.0.3',  // 构建工具版本
+            minSdkVersion    : 21,        // 最低系统版本
+            targetSdkVersion : 30,        // 目标系统版本
+    ]
+
+    google = [
+            core_ktx   : 'androidx.core:core-ktx:1.7.0',
+            appcompat       : 'androidx.appcompat:appcompat:1.4.1',
+            material        : 'com.google.android.material:material:1.5.0',
+            constraintlayout: 'androidx.constraintlayout:constraintlayout:2.1.3',
+    ]
+}
