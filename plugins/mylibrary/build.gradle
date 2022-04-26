@@ -1,18 +1,1 @@
-apply plugin: 'groovy'
-apply from: "../publish_script.gradle"
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
-    implementation 'com.android.tools.build:gradle:4.2.0'
-    implementation project(":plugins:base")
-}
+apply from: "../plugin_module_config.gradle"
