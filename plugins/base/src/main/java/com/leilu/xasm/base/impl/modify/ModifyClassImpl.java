@@ -120,7 +120,9 @@ public class ModifyClassImpl implements IModifyClass {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 // 检查方法合法性
-                ASMUtil.throwExceptionIfAbsOrNativeMethod(name, access);
+                if (ASMUtil.isAbsOrNativeMethod(name, access)) {
+                    return super.visitMethod(access, name, descriptor, signature, exceptions);
+                }
 
                 // 这里遍历一下将要添加的方法是否已经在类中存在，如果存在，则添加到删除列表中删除旧的，等再visitEnd方法中添加新的
                 if (mPaddingAddMethodList.contains(new AddMethodData(access, name, descriptor))) {

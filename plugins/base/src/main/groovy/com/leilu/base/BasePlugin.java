@@ -208,9 +208,9 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
 
     private boolean validateClass(String name) {
         return name.endsWith(".class")
-                && !name.startsWith("R\\$")
-                && !"R.class".equals(name)
-                && !"BuildConfig.class".equals(name)
+                && !name.contains("R$")
+                && !name.contains("R.class")
+                && !name.endsWith("BuildConfig.class")
                 && !name.startsWith("android/support")
                 && !name.startsWith("androidx/")
                 && !name.startsWith("META-INF")

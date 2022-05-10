@@ -58,6 +58,7 @@ public class HookImpl implements IHook {
     private HookMethodData getHookMethodData(MethodNode mn) {
         // 遍历非lambda表达式
         for (HookMethodData data : mPaddingHookMethodList) {
+            System.out.println("getHookMethodData :" + data.methodName + "   " + data.describer);
             if (mn.name.equals(data.methodName) && mn.desc.equals(data.describer)) {
                 return data;
             }
@@ -218,7 +219,9 @@ public class HookImpl implements IHook {
 
     private void realHook(MethodNode mn, OnHookMethodListener listener) {
         // 检查方法合法性
-        ASMUtil.throwExceptionIfAbsOrNativeMethod(mn.name, mn.access);
+        if (ASMUtil.isAbsOrNativeMethod(mn.name, mn.access)) {
+            return;
+        }
 
         // 构建一个MethodInfo对象
         MethodInfo methodInfo = createMethodInfo(mn);

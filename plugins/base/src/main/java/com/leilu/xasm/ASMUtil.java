@@ -1,6 +1,7 @@
 package com.leilu.xasm;
 
 import com.leilu.xasm.base.inter.IAddAnnotation;
+
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnNode;
@@ -36,12 +37,10 @@ public class ASMUtil {
      * @param access
      * @return
      */
-    public static void throwExceptionIfAbsOrNativeMethod(String name, int access) {
+    public static boolean isAbsOrNativeMethod(String name, int access) {
         boolean isAbstractMethod = (access & Opcodes.ACC_ABSTRACT) != 0;
         boolean isNativeMethod = (access & Opcodes.ACC_NATIVE) != 0;
-        if (isAbstractMethod || isNativeMethod) {
-            throw new RuntimeException("The " + name + " can't be a abstract method or native method !");
-        }
+        return isAbstractMethod || isNativeMethod;
     }
 
     /**
