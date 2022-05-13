@@ -1,5 +1,7 @@
 package com.leilu.xasm.base.impl.modify;
 
+import android.util.Pair;
+
 import com.leilu.xasm.ASMUtil;
 import com.leilu.xasm.base.Const;
 import com.leilu.xasm.base.impl.modify.bean.HookMethodData;
@@ -98,38 +100,48 @@ public class HookImpl implements IHook {
     }
 
     private void hookAnnotation(ClassNode cn, List<MethodNode> methodNodes) {
+        List<Pair<MethodNode, HookMethodWithAnnotation>> list = new ArrayList<>();
         for (MethodNode mn : methodNodes) {
             HookMethodWithAnnotation data = getHookMethodWithAnnotationData(mn.visibleAnnotations);
             if (data == null || data.annotationMap.size() == 0) {
                 continue;
             }
-            realHook(cn, mn, new OnHookMethodListener() {
+            list.add(new Pair<>(mn, data));
+        }
+        for (Pair<MethodNode, HookMethodWithAnnotation> pair : list) {
+            realHook(cn, pair.first, new OnHookMethodListener() {
                 @Override
                 public InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
-                    return data.listener.onMethodStart(cn, mn, methodInfo);
+                    return pair.second.listener.onMethodStart(cn, mn, methodInfo);
                 }
 
                 @Override
                 public boolean visitInsnNode(ClassNode cn, AbstractInsnNode abstractInsnNode, MethodInfo methodInfo) {
-                    return data.listener.visitInsnMode(cn, abstractInsnNode, methodInfo);
+                    return pair.second.listener.visitInsnMode(cn, abstractInsnNode, methodInfo);
                 }
 
                 @Override
                 public InsnList onMethodEnd(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
-                    return data.listener.onMethodEnd(cn, mn, methodInfo);
+                    return pair.second.listener.onMethodEnd(cn, mn, methodInfo);
                 }
             });
+
         }
     }
 
     private void hookMethod(ClassNode cn, List<MethodNode> methodNodes) {
         // 先查找是否有匹配的非lambda表达式对应的方法，如果有则hook
+        List<Pair<MethodNode, HookMethodData>> list = new ArrayList<>();
         for (MethodNode mn : methodNodes) {
             HookMethodData data = getHookMethodData(mn);
             if (data == null) {
                 continue;
             }
-            realHook(cn, mn, new HookMethodListener(cn, data));
+            list.add(new Pair<>(mn, data));
+
+        }
+        for (Pair<MethodNode, HookMethodData> pair : list) {
+            realHook(cn, pair.first, new HookMethodListener(cn, pair.second));
         }
         // 再查找是否有匹配的lambda表达式的方法，有则hook
         hookLambdaMethod(cn, methodNodes);
@@ -158,15 +170,19 @@ public class HookImpl implements IHook {
                 }
             }
         }
+        List<Pair<MethodNode, HookMethodData>> pairList = new ArrayList<>();
         // 遍历找到的lambda表达式实现的方法，然后拿到对应的方法句柄，看方法名和签名是否一样，是则进行hook
         for (MethodNode mn : methodNodes) {
             for (HookMethodData data : list) {
                 Handle handle = (Handle) data.node.bsmArgs[1];
                 if (mn.name.equals(handle.getName()) && mn.desc.equals(handle.getDesc())) {
-                    realHook(cn, mn, new HookMethodListener(cn, data));
+                    pairList.add(new Pair<>(mn, data));
                 }
 
             }
+        }
+        for (Pair<MethodNode, HookMethodData> pair : pairList) {
+            realHook(cn, pair.first, new HookMethodListener(cn, pair.second));
         }
     }
 
