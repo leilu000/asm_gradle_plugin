@@ -9,6 +9,7 @@ import com.leilu.xasm.base.inter.IHook;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.LdcInsnNode;
@@ -28,17 +29,17 @@ public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
                         , "android/view/View$OnClickListener"
                         , new IHook.OnHookMethodListener() {
                             @Override
-                            public InsnList onMethodStart(MethodNode mn, MethodInfo methodInfo) {
+                            public InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
                                 return createInsnList(mn.name + "方法开始");
                             }
 
                             @Override
-                            public boolean visitInsnNode(AbstractInsnNode abstractInsnNode, MethodInfo methodInfo) {
+                            public boolean visitInsnNode(ClassNode cn, AbstractInsnNode abstractInsnNode, MethodInfo methodInfo) {
                                 return false;
                             }
 
                             @Override
-                            public InsnList onMethodEnd(MethodNode mn, MethodInfo methodInfo) {
+                            public InsnList onMethodEnd(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
                                 return createInsnList(mn.name + "方法结束");
                             }
                         })

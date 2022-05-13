@@ -1,14 +1,15 @@
 package com.leilu.xasm.base.inter;
 
 import com.leilu.xasm.base.impl.modify.bean.MethodInfo;
+
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.List;
 
 public interface IHook {
-
     /**
      * hook方法的带有某些注解的方法回调
      */
@@ -16,29 +17,32 @@ public interface IHook {
         /**
          * 在方法开始前插入代码
          *
+         * @param cn
          * @param mn
          * @param methodInfo
          * @return 插入的指令集合，如果为空，则不插入任何方法
          */
-        InsnList onMethodStart(MethodNode mn, MethodInfo methodInfo);
+        InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo);
 
         /**
          * 遍历方法体的指令，可以在里面替换类的创建，方法的调用等
          *
+         * @param cn
          * @param abstractInsnNode
          * @param methodInfo
          * @return 是否删除该指令，如果返回true，则删除该指令；false，则不删除该指令
          */
-        boolean visitInsnMode(AbstractInsnNode abstractInsnNode, MethodInfo methodInfo);
+        boolean visitInsnMode(ClassNode cn, AbstractInsnNode abstractInsnNode, MethodInfo methodInfo);
 
         /**
          * 在方法结束后插入代码
          *
+         * @param cn
          * @param mn
          * @param methodInfo
          * @return 插入的指令集合，如果为空，则不插入任何方法
          */
-        InsnList onMethodEnd(MethodNode mn, MethodInfo methodInfo);
+        InsnList onMethodEnd(ClassNode cn, MethodNode mn, MethodInfo methodInfo);
     }
 
     /**
@@ -48,29 +52,32 @@ public interface IHook {
         /**
          * 在方法开始前插入代码
          *
+         * @param cn
          * @param mn
          * @param methodInfo
          * @return 插入的指令集合，如果为空，则不插入任何方法
          */
-        InsnList onMethodStart(MethodNode mn, MethodInfo methodInfo);
+        InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo);
 
         /**
          * 遍历方法体的指令，可以在里面替换类的创建，方法的调用等
          *
+         * @param cn
          * @param abstractInsnNode
          * @param methodInfo
          * @return 是否删除该指令，如果返回true，则删除该指令；false，则不删除该指令
          */
-        boolean visitInsnNode(AbstractInsnNode abstractInsnNode, MethodInfo methodInfo);
+        boolean visitInsnNode(ClassNode cn, AbstractInsnNode abstractInsnNode, MethodInfo methodInfo);
 
         /**
          * 在方法结束后插入代码
          *
+         * @param cn
          * @param mn
          * @param methodInfo
          * @return 插入的指令集合，如果为空，则不插入任何方法
          */
-        InsnList onMethodEnd(MethodNode mn, MethodInfo methodInfo);
+        InsnList onMethodEnd(ClassNode cn, MethodNode mn, MethodInfo methodInfo);
     }
 
     /**
