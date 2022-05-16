@@ -4,9 +4,12 @@ import com.leilu.xasm.base.inter.IAddAnnotation;
 
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.*;
 import java.lang.invoke.MethodHandle;
@@ -15,6 +18,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class ASMUtil {
@@ -660,5 +664,49 @@ public class ASMUtil {
      */
     public static boolean isStaticMethod(int access) {
         return (Opcodes.ACC_STATIC & access) != 0;
+    }
+
+    /**
+     * 克隆一个和原来方法一样方法体和签名的新方法
+     *
+     * @param access           方法的访问权限
+     * @param newName          新方法名
+     * @param sourceMethodNode 源方法的MethodNode
+     * @return
+     */
+    public static MethodNode cloneMethod(final int access, final String newName, final MethodNode sourceMethodNode) {
+        String[] exceptions = null;
+        if (sourceMethodNode.exceptions != null && sourceMethodNode.exceptions.size() > 0) {
+            exceptions = new String[sourceMethodNode.exceptions.size()];
+            for (int i = 0; i < sourceMethodNode.exceptions.size(); i++) {
+                exceptions[i] = sourceMethodNode.exceptions.get(i);
+            }
+        }
+        MethodNode newMethodNode = new MethodNode(Opcodes.ASM7, access, newName, sourceMethodNode.desc
+                , sourceMethodNode.signature, exceptions);
+        InsnList il = new InsnList();
+        ListIterator<AbstractInsnNode> iterator = sourceMethodNode.instructions.iterator();
+        while (iterator.hasNext()) {
+            AbstractInsnNode ain = iterator.next();
+            AbstractInsnNode newNode = new AbstractInsnNode(ain.getOpcode()) {
+                @Override
+                public int getType() {
+                    return ain.getType();
+                }
+
+                @Override
+                public void accept(MethodVisitor methodVisitor) {
+                    ain.accept(methodVisitor);
+                }
+
+                @Override
+                public AbstractInsnNode clone(Map<LabelNode, LabelNode> clonedLabels) {
+                    return ain.clone(clonedLabels);
+                }
+            };
+            il.add(newNode);
+        }
+        newMethodNode.instructions.add(il);
+        return newMethodNode;
     }
 }
