@@ -16,6 +16,9 @@
             <option value="$PROJECT_DIR$/plugins/base" />
             <option value="$PROJECT_DIR$/plugins/method_hook_plugin" />
             <option value="$PROJECT_DIR$/plugins/method_hook_plugin/method_hook" />
+            <option value="$PROJECT_DIR$/plugins/thread_schedule" />
+            <option value="$PROJECT_DIR$/plugins/thread_schedule/libthread_schedule" />
+            <option value="$PROJECT_DIR$/plugins/thread_schedule/thread_schedule_plugin" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

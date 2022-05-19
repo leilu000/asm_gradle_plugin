@@ -2,6 +2,9 @@ package com.leilu.xasm.base.impl;
 
 
 import com.leilu.xasm.base.inter.IAddMethod;
+
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.Map;
@@ -17,10 +20,11 @@ public class SimpleOnAddMethodListener implements IAddMethod.OnAddMethodListener
      * 无需再调用visitInsn(Opcodec.XXRETURN)
      * 无需再调用visitMaxs方法
      *
+     * @param cw
      * @param mv
      */
     @Override
-    public void onAddMethodBody(MethodVisitor mv) {
+    public void onAddMethodBody(ClassWriter cw, MethodVisitor mv) {
 
     }
 

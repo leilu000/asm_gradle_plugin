@@ -1,6 +1,7 @@
 package com.leilu.xasm;
 
 import com.leilu.xasm.base.inter.IAddAnnotation;
+import com.leilu.xasm.base.inter.IAddMethod;
 
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -22,6 +23,47 @@ import java.util.ListIterator;
 import java.util.Map;
 
 public class ASMUtil {
+
+    /**
+     * 根据方法签名逐个加载参数到操作数栈
+     *
+     * @param methodAccess 方法的access
+     * @param mv
+     * @param desc         方法签名
+     */
+    public static void loadAllVar(int methodAccess, MethodVisitor mv, String desc) {
+        Type[] paramTypes = Type.getArgumentTypes(desc);
+        if (paramTypes == null || paramTypes.length == 0) {
+            return;
+        }
+        boolean isStaticMethod = ASMUtil.isStaticMethod(methodAccess);
+        int startIndex = isStaticMethod ? 1 : 0;
+        int opcode;
+        for (int i = 0; i < paramTypes.length; i++) {
+            Type type = paramTypes[i];
+            String fieldDesc = type.getDescriptor();
+            if (fieldDesc.equals("B")
+                    || fieldDesc.equals("I")
+                    || fieldDesc.equals("S")
+                    || fieldDesc.equals("Z")
+                    || fieldDesc.equals("C")) {
+                opcode = Opcodes.ILOAD;
+            } else if (fieldDesc.equals("F")) {
+                opcode = Opcodes.FLOAD;
+            } else if (fieldDesc.equals("J")) {
+                opcode = Opcodes.LLOAD;
+            } else if (fieldDesc.equals("D")) {
+                opcode = Opcodes.DLOAD;
+            } else {
+                opcode = Opcodes.ALOAD;
+            }
+            if (isStaticMethod) {
+                mv.visitVarInsn(Opcodes.ALOAD, 0);
+            }
+            mv.visitVarInsn(opcode, startIndex);
+            startIndex += type.getSize();
+        }
+    }
 
     /**
      * 判断是否到达方法结尾
@@ -157,6 +199,32 @@ public class ASMUtil {
         }
     }
 
+
+    /**
+     * 根据返回值类型获取ASM的Opcodes.XXLOAD
+     *
+     * @param desc
+     * @return
+     */
+    public static int getLoadOpcodec(String desc) {
+        if (desc.equals("B")
+                || desc.equals("I")
+                || desc.equals("S")
+                || desc.equals("Z")
+                || desc.equals("C")) {
+            return Opcodes.ILOAD;
+        }
+        if (desc.equals("F")) {
+            return Opcodes.FLOAD;
+        }
+        if (desc.equals("J")) {
+            return Opcodes.LLOAD;
+        }
+        if (desc.equals("D")) {
+            return Opcodes.DLOAD;
+        }
+        return Opcodes.ALOAD;
+    }
 
     /**
      * 根据class类型得到Opcodes.XLOAD
@@ -434,7 +502,7 @@ public class ASMUtil {
      * @param desc
      * @return
      */
-    public static int getOpcodecReturnValue(String desc) {
+    public static int getOpcodecReturnValueByDesc(String desc) {
         String returnType = desc.substring(desc.lastIndexOf(")") + 1);
         if (returnType.equals("B")
                 || returnType.equals("I")
@@ -464,7 +532,7 @@ public class ASMUtil {
      * @param returnType
      * @return
      */
-    public static int getOpcodecReturnValue(Class<?> returnType) {
+    public static int getOpcodecReturnValueByDesc(Class<?> returnType) {
         if (returnType == byte.class || returnType == int.class
                 || returnType == short.class || returnType == boolean.class || returnType == char.class) {
             return Opcodes.IRETURN;
@@ -667,6 +735,21 @@ public class ASMUtil {
     }
 
     /**
+     * 将String list转成数组
+     *
+     * @param list
+     * @return
+     */
+    public static String[] stringListToArray(List<String> list) {
+        String[] array = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
+
+    /**
      * 克隆一个和原来方法一样方法体和签名的新方法
      *
      * @param access           方法的访问权限
@@ -675,13 +758,7 @@ public class ASMUtil {
      * @return
      */
     public static MethodNode cloneMethod(final int access, final String newName, final MethodNode sourceMethodNode) {
-        String[] exceptions = null;
-        if (sourceMethodNode.exceptions != null && sourceMethodNode.exceptions.size() > 0) {
-            exceptions = new String[sourceMethodNode.exceptions.size()];
-            for (int i = 0; i < sourceMethodNode.exceptions.size(); i++) {
-                exceptions[i] = sourceMethodNode.exceptions.get(i);
-            }
-        }
+        String[] exceptions = stringListToArray(sourceMethodNode.exceptions);
         MethodNode newMethodNode = new MethodNode(Opcodes.ASM7, access, newName, sourceMethodNode.desc
                 , sourceMethodNode.signature, exceptions);
         InsnList il = new InsnList();
@@ -709,4 +786,5 @@ public class ASMUtil {
         newMethodNode.instructions.add(il);
         return newMethodNode;
     }
+
 }

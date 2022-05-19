@@ -190,6 +190,9 @@ public class HookImpl implements IHook {
         MethodInfo methodInfo = new MethodInfo();
         methodInfo.isStatic = ASMUtil.isStaticMethod(mn.access);
         methodInfo.parameterTypes = Type.getArgumentTypes(mn.desc);
+        methodInfo.name = mn.name;
+        methodInfo.access = mn.access;
+        methodInfo.desc = mn.desc;
         List<AnnotationNode> annotationNodes = mn.visibleAnnotations;
         if (annotationNodes != null) {
             Map<String, Map<String, Object>> map = methodInfo.annotationMap;

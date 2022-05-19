@@ -1,5 +1,7 @@
 package com.leilu.xasm.base.inter;
 
+import org.objectweb.asm.Type;
+
 /**
  * 添加属性
  */
@@ -30,5 +32,15 @@ public interface IAddField {
      * @param listener
      */
     void addField(int access, String name, String desc, Object defaultValue, OnAddFiledListener listener);
+
+    /**
+     * 批量添加属性
+     *
+     * @param access
+     * @param varPrefix 属性的前缀，比如数组有3个长度，创建的属性根据下标依次
+     *                  为：varPrefix0、varPrefix1、varPrefix2...
+     * @param types
+     */
+    void addFields(int access, String varPrefix, Type[] types);
 
 }

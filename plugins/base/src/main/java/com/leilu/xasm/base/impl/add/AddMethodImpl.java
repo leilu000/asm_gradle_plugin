@@ -5,9 +5,11 @@ import com.leilu.xasm.base.impl.SimpleOnAddMethodListener;
 import com.leilu.xasm.XASM;
 import com.leilu.xasm.base.Const;
 import com.leilu.xasm.base.inter.IAddMethod;
+
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 
 import java.util.ArrayList;
@@ -38,6 +40,13 @@ public class AddMethodImpl implements IAddMethod {
     }
 
     @Override
+    public void addFields(int access, String varPrefix, Type[] types) {
+        for (int i = 0; i < types.length; i++) {
+            mClassWriter.visitField(access, varPrefix + i, types[i].getDescriptor(), null, null);
+        }
+    }
+
+    @Override
     public void addMethod(int access, String name, String desc, SimpleOnAddMethodListener listener) {
         addMethod(access, name, desc, null, listener);
     }
@@ -47,7 +56,7 @@ public class AddMethodImpl implements IAddMethod {
         if (Const.CONSTRUCTOR_NAME.equals(name)) {
             throw new IllegalArgumentException("Please use addConstructorMethod to add " + name + "  method !");
         }
-        int opcodesReturn = ASMUtil.getOpcodecReturnValue(desc);
+        int opcodesReturn = ASMUtil.getOpcodecReturnValueByDesc(desc);
         addObjectReturnMethod(access, name, desc, opcodesReturn, exceptions, listener);
     }
 
@@ -79,7 +88,7 @@ public class AddMethodImpl implements IAddMethod {
                 ASMUtil.addAnnotations(mv, listener, null);
             }
             // 回调过去添加方法体
-            listener.onAddMethodBody(mv);
+            listener.onAddMethodBody(mClassWriter, mv);
         }
         mv.visitInsn(opcodesReturn);
         // 由于创建ClassWriter的时候使用的是COMPUTE_FRAMES模式，这个模式会

@@ -1,11 +1,14 @@
 package com.leilu.xasm;
 
+import com.android.tools.r8.v.b.P;
 import com.leilu.xasm.base.impl.SimpleOnAddMethodListener;
 import com.leilu.xasm.base.impl.add.CreateClassImpl;
 import com.leilu.xasm.base.inter.IAddAnnotation;
 import com.leilu.xasm.base.inter.IAddField;
 import com.leilu.xasm.base.inter.ICreateClass;
+
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * 创建类的包装类，主要是方便链式调用
@@ -21,7 +24,7 @@ public class CreateClassWrapper {
      * @param className 类名
      */
     public CreateClassWrapper(String className) {
-        this(className, null, null);
+        this(className, null, null, null);
     }
 
     /**
@@ -31,18 +34,19 @@ public class CreateClassWrapper {
      * @param listener  根据需要复写响应方法类创建方法体等
      */
     public CreateClassWrapper(String className, SimpleOnAddMethodListener listener) {
-        this(className, null, listener);
+        this(className, null, null, listener);
     }
 
     /**
      * 默认会创建无参构造方法
      *
      * @param className  类名
-     * @param superClass 父类
+     * @param superClass 要继承的父类 如果为null，则默认是Object
+     * @param interfaces 接口
      * @param listener   根据需要复写响应方法类创建方法体等
      */
-    public CreateClassWrapper(String className, Class<?> superClass, SimpleOnAddMethodListener listener) {
-        this(Opcodes.V1_8, className, superClass, listener);
+    public CreateClassWrapper(String className, String superClass, String[] interfaces, SimpleOnAddMethodListener listener) {
+        this(Opcodes.V1_8, className, superClass, interfaces, listener);
     }
 
     /**
@@ -50,11 +54,12 @@ public class CreateClassWrapper {
      *
      * @param javaVersion java版本: Opcodes.V1_8等
      * @param className   类名
-     * @param superClass  父类
+     * @param superClass  要继承的父类 如果为null，则默认是Object
+     * @param interfaces  接口
      * @param listener    根据需要复写响应方法类创建方法体等
      */
-    public CreateClassWrapper(int javaVersion, String className, Class<?> superClass, SimpleOnAddMethodListener listener) {
-        mAddASM = new CreateClassImpl(javaVersion, className, superClass, listener);
+    public CreateClassWrapper(int javaVersion, String className, String superClass, String[] interfaces, SimpleOnAddMethodListener listener) {
+        mAddASM = new CreateClassImpl(javaVersion, className, superClass, interfaces, listener);
     }
 
     /**
@@ -157,6 +162,23 @@ public class CreateClassWrapper {
     }
 
     /**
+     * 根据type数组批量创建属性
+     *
+     * @param access    创建的属性的访问权限
+     * @param varPrefix 属性的前缀，比如数组有3个长度，创建的属性根据下标依次
+     *                  为：varPrefix0、varPrefix1、varPrefix2...
+     * @param types
+     * @return
+     */
+    public CreateClassWrapper addFileds(int access, String varPrefix, Type[] types) {
+        if (types == null || types.length == 0) {
+            return this;
+        }
+        mAddASM.addFields(access, varPrefix, types);
+        return this;
+    }
+
+    /**
      * 获取最终结果数据
      *
      * @return
@@ -164,4 +186,5 @@ public class CreateClassWrapper {
     public byte[] toByteArray() {
         return mAddASM.toByteArray();
     }
+
 }

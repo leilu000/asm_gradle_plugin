@@ -3,8 +3,10 @@ package com.leilu.xasm.base.impl.add;
 import com.leilu.xasm.ASMUtil;
 import com.leilu.xasm.XASM;
 import com.leilu.xasm.base.inter.IAddField;
+
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Type;
 
 
 import java.util.ArrayList;
@@ -23,6 +25,21 @@ public class AddFieldImpl implements IAddField {
     @Override
     public void addField(int access, String name, String desc, Object defaultValue) {
         addField(access, name, desc, defaultValue, null);
+    }
+
+    @Override
+    public void addFields(int access, String varPrefix, Type[] types) {
+        if (mNameList.contains(varPrefix)) {
+            XASM.getInstance().getLogger().w("Please dont add repeatedly the field varPrefix name:" + varPrefix);
+            return;
+        }
+        mNameList.add(varPrefix);
+        for (int i = 0; i < types.length; i++) {
+            Type type = types[i];
+            FieldVisitor fv = mClassWriter.visitField(access, varPrefix + i, type.getDescriptor()
+                    , null, null);
+            fv.visitEnd();
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.leilu.xasm.base.impl.add.AddMethodImpl;
 import com.leilu.xasm.base.impl.modify.bean.AddFieldData;
 import com.leilu.xasm.base.impl.modify.bean.AddMethodData;
 import com.leilu.xasm.base.impl.modify.bean.ModifyData;
+import com.leilu.xasm.base.impl.modify.bean.PatchAddFieldData;
 import com.leilu.xasm.base.impl.modify.field.ModifyFieldVisitor;
 import com.leilu.xasm.base.impl.modify.field.ModifyMethodVisitor;
 import com.leilu.xasm.base.inter.*;
@@ -56,6 +57,8 @@ public class ModifyClassImpl implements IModifyClass {
     private final IAddField mAddField;
     // 保存将要被添加的属性
     private final List<AddFieldData> mPaddingAddFieldList = new ArrayList<>();
+    // 保存将要被批量添加的属性
+    private final List<PatchAddFieldData> mPaddingPatchAddFieldList = new ArrayList<>();
     // 负责添加方法
     private final IAddMethod mAddMethod;
     // 保存将要添加的方法
@@ -162,6 +165,10 @@ public class ModifyClassImpl implements IModifyClass {
                 for (AddFieldData data : mPaddingAddFieldList) {
                     mAddField.addField(data.access, data.name, data.describer, data.defaultValue, data.listener);
                 }
+                // 添加批量属性
+                for (PatchAddFieldData data : mPaddingPatchAddFieldList) {
+                    mAddField.addFields(data.access, data.varPrefix, data.types);
+                }
                 // 添加新的方法
                 for (AddMethodData data : mPaddingAddMethodList) {
                     mAddMethod.addMethod(data.access, data.name, data.desc, data.exceptions, data.listener);
@@ -192,6 +199,14 @@ public class ModifyClassImpl implements IModifyClass {
         ModifyData data = new ModifyData(name, desc);
         if (!mPaddingRemoveMethodList.contains(data)) {
             mPaddingRemoveMethodList.add(data);
+        }
+    }
+
+    @Override
+    public void addFields(int access, String varPrefix, Type[] types) {
+        PatchAddFieldData data = new PatchAddFieldData(access, varPrefix, types);
+        if (!mPaddingPatchAddFieldList.contains(data)) {
+            mPaddingPatchAddFieldList.add(data);
         }
     }
 

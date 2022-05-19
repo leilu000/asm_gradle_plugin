@@ -1,0 +1,1 @@
+apply from: "${rootDir}/plugins/plugin_module_config.gradle"

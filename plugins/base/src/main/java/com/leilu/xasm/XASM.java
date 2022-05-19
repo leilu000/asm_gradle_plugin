@@ -29,6 +29,15 @@ public class XASM {
     }
 
     /**
+     * 打印日志
+     *
+     * @return
+     */
+    public ILogger getLogger() {
+        return mLogger;
+    }
+
+    /**
      * 获取新建对象、调用方法的封装的帮助类
      *
      * @return
@@ -44,16 +53,6 @@ public class XASM {
      */
     public ASMPrinter getASMPrinter() {
         return mASMPrinter;
-    }
-
-
-    /**
-     * 打印日志
-     *
-     * @return
-     */
-    public ILogger getLogger() {
-        return mLogger;
     }
 
     /**
@@ -81,12 +80,13 @@ public class XASM {
      * 创建类，默认创建一个无参构造
      *
      * @param className  类名
-     * @param superClass 要继承的父类
+     * @param superClass 要继承的父类 如果为null，则默认是Object
+     * @param interfaces 接口
      * @param listener   写自己的构造方法体
      * @return
      */
-    public CreateClassWrapper createClass(String className, Class<?> superClass, SimpleOnAddMethodListener listener) {
-        return new CreateClassWrapper(className, superClass, listener);
+    public CreateClassWrapper createClass(String className, String superClass, String[] interfaces, SimpleOnAddMethodListener listener) {
+        return new CreateClassWrapper(className, superClass, interfaces, listener);
     }
 
     /**
@@ -94,13 +94,15 @@ public class XASM {
      *
      * @param javaVersion java版本：Opcodes.V1_8等
      * @param className   类名
-     * @param superClass  要继承的父类
+     * @param superClass  要继承的父类 如果为null，则默认是Object
+     * @param interfaces  接口
      * @param listener    写自己的构造方法体
      * @return
      */
-    public CreateClassWrapper createClass(int javaVersion, String className, Class<?> superClass, SimpleOnAddMethodListener listener) {
-        return new CreateClassWrapper(javaVersion, className, superClass, listener);
+    public CreateClassWrapper createClass(int javaVersion, String className, String superClass, String[] interfaces, SimpleOnAddMethodListener listener) {
+        return new CreateClassWrapper(javaVersion, className, superClass, interfaces, listener);
     }
+
 
     /**
      * 修改类

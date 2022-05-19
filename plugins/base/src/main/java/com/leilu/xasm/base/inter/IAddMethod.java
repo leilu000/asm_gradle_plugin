@@ -2,12 +2,17 @@ package com.leilu.xasm.base.inter;
 
 
 import com.leilu.xasm.base.impl.SimpleOnAddMethodListener;
+
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 /**
  * 和添加方法相关的接口
  */
 public interface IAddMethod {
+
 
     interface OnAddMethodListener extends IAddAnnotation {
         /**
@@ -16,18 +21,29 @@ public interface IAddMethod {
          * 无需再调用visitInsn(Opcodec.XXRETURN)
          * 无需再调用visitMaxs方法
          *
+         * @param cw
          * @param mv
          */
-        void onAddMethodBody(MethodVisitor mv);
+        void onAddMethodBody(ClassWriter cw, MethodVisitor mv);
 
 
     }
 
     /**
+     * 批量添加属性
+     *
+     * @param access
+     * @param varPrefix 属性的前缀，比如数组有3个长度，创建的属性根据下标依次
+     *                  为：varPrefix0、varPrefix1、varPrefix2...
+     * @param types
+     */
+    void addFields(int access, String varPrefix, Type[] types);
+
+    /**
      * 添加构造方法
      *
-     * @param access         Opcodec.ACC_PUBLIC...
-     * @param desc 方法签名
+     * @param access   Opcodec.ACC_PUBLIC...
+     * @param desc     方法签名
      * @param listener
      */
     void addConstructorMethod(int access, String desc, SimpleOnAddMethodListener listener);
