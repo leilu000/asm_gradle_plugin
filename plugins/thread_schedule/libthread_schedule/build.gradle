@@ -2,9 +2,14 @@ plugins {
     id 'com.android.library'
 }
 
+apply from: "${rootDir}/config.gradle"
+
 android {
-    compileSdkVersion 30
-    buildToolsVersion '29.0.3'
+    compileSdkVersion rootProject.ext.config.compileSdkVersion
+    buildToolsVersion rootProject.ext.config.buildToolsVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.config.minSdkVersion
+    }
 }
 
 java {

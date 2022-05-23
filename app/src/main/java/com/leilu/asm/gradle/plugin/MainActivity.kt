@@ -16,14 +16,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<Button>(R.id.btn3).setOnClickListener(listener)
     }
 
+   // @BGThread
     override fun onClick(v: View?) {
-        println("复写OnClickListener 实现的 onClick")
+        println("复写OnClickListener 实现的 onClick:${Thread.currentThread().name}")
     }
 
     val listener = object : View.OnClickListener {
+
+     //   @BGThread
         override fun onClick(v: View?) {
-            println("匿名内部类 实现的 onClick")
+            println("匿名内部类 实现的 onClick:${Thread.currentThread().name}")
         }
     }
+
 
 }

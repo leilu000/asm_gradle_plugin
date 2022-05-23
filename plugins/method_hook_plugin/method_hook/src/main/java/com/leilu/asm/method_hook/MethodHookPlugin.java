@@ -2,6 +2,7 @@ package com.leilu.asm.method_hook;
 
 import com.android.build.api.transform.Status;
 import com.leilu.base.BasePlugin;
+
 import xasm.ASMUtil;
 import xasm.XASM;
 import xasm.base.impl.modify.bean.MethodInfo;
@@ -21,7 +22,7 @@ import java.io.PrintStream;
 public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
 
     @Override
-    protected byte[] modifyClass(byte[] classData, Status status) {
+    protected byte[] modifyClass(String destDirPath, byte[] classData, Status status) {
         return XASM.getInstance()
                 .modifyClass(classData)
                 .hookMethod("onClick"

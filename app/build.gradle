@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'method_hook.plugin'
+//apply plugin: 'method_hook.plugin'
+apply plugin: 'thread_schedule.plugin'
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion
@@ -41,4 +42,6 @@ dependencies {
     implementation rootProject.ext.google.appcompat
     implementation rootProject.ext.google.material
     implementation rootProject.ext.google.constraintlayout
+
+    //implementation project(":plugins:thread_schedule:libthread_schedule")
 }

@@ -1,12 +1,13 @@
 package xasm.base.impl.modify;
 
+import android.util.Pair;
+
 import xasm.ASMUtil;
 import xasm.base.Const;
 import xasm.base.impl.modify.bean.HookMethodData;
 import xasm.base.impl.modify.bean.HookMethodWithAnnotation;
 import xasm.base.impl.modify.bean.MethodInfo;
 import xasm.base.inter.IHook;
-import javafx.util.Pair;
 
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
@@ -109,20 +110,20 @@ public class HookImpl implements IHook {
             list.add(new Pair<>(mn, data));
         }
         for (Pair<MethodNode, HookMethodWithAnnotation> pair : list) {
-            realHook(cn, pair.getKey(), new OnHookMethodListener() {
+            realHook(cn, pair.first, new OnHookMethodListener() {
                 @Override
                 public InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
-                    return pair.getValue().listener.onMethodStart(cn, mn, methodInfo);
+                    return pair.second.listener.onMethodStart(cn, mn, methodInfo);
                 }
 
                 @Override
                 public boolean visitInsnNode(ClassNode cn, AbstractInsnNode abstractInsnNode, MethodInfo methodInfo) {
-                    return pair.getValue().listener.visitInsnMode(cn, abstractInsnNode, methodInfo);
+                    return pair.second.listener.visitInsnMode(cn, abstractInsnNode, methodInfo);
                 }
 
                 @Override
                 public InsnList onMethodEnd(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
-                    return pair.getValue().listener.onMethodEnd(cn, mn, methodInfo);
+                    return pair.second.listener.onMethodEnd(cn, mn, methodInfo);
                 }
             });
 
@@ -141,7 +142,7 @@ public class HookImpl implements IHook {
 
         }
         for (Pair<MethodNode, HookMethodData> pair : list) {
-            realHook(cn, pair.getKey(), new HookMethodListener(cn, pair.getValue()));
+            realHook(cn, pair.first, new HookMethodListener(cn, pair.second));
         }
         // 再查找是否有匹配的lambda表达式的方法，有则hook
         hookLambdaMethod(cn, methodNodes);
@@ -179,7 +180,7 @@ public class HookImpl implements IHook {
             }
         }
         for (Pair<MethodNode, HookMethodData> pair : pairList) {
-            realHook(cn, pair.getKey(), new HookMethodListener(cn, pair.getValue()));
+            realHook(cn, pair.first, new HookMethodListener(cn, pair.second));
         }
     }
 
@@ -235,7 +236,7 @@ public class HookImpl implements IHook {
 
     private void realHook(ClassNode cn, MethodNode mn, IHook.OnHookMethodListener listener) {
         // 检查方法合法性
-        ASMUtil.throwExceptionIfAbsOrNativeMethod(mn.name, mn.access);
+        // ASMUtil.throwExceptionIfAbsOrNativeMethod(mn.name, mn.access);
 
         // 构建一个MethodInfo对象
         MethodInfo methodInfo = createMethodInfo(mn);
