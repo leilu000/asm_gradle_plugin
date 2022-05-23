@@ -1,5 +1,10 @@
 plugins {
-    id 'android-library'
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion '29.0.3'
 }
 
 java {

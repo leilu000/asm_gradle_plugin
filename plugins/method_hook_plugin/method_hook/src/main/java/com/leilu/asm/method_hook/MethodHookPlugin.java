@@ -2,10 +2,10 @@ package com.leilu.asm.method_hook;
 
 import com.android.build.api.transform.Status;
 import com.leilu.base.BasePlugin;
-import com.leilu.xasm.ASMUtil;
-import com.leilu.xasm.XASM;
-import com.leilu.xasm.base.impl.modify.bean.MethodInfo;
-import com.leilu.xasm.base.inter.IHook;
+import xasm.ASMUtil;
+import xasm.XASM;
+import xasm.base.impl.modify.bean.MethodInfo;
+import xasm.base.inter.IHook;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;

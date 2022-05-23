@@ -1,8 +1,8 @@
 package com.leilu.asm.gradle.thread_schedule;
 
-import com.leilu.xasm.ASMUtil;
-import com.leilu.xasm.base.impl.modify.bean.MethodInfo;
-import com.leilu.xasm.base.inter.IHook;
+import xasm.ASMUtil;
+import xasm.base.impl.modify.bean.MethodInfo;
+import xasm.base.inter.IHook;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;

@@ -1,7 +1,7 @@
 package com.leilu.asm.gradle.thread_schedule;
 
-import com.leilu.xasm.ASMUtil;
-import com.leilu.xasm.XASM;
+import xasm.ASMUtil;
+import xasm.XASM;
 import com.leilu.xasm.base.impl.SimpleOnAddMethodListener;
 
 import org.objectweb.asm.ClassWriter;
