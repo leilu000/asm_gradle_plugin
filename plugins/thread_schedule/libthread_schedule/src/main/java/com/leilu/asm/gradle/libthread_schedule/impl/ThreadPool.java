@@ -42,4 +42,9 @@ public class ThreadPool implements IThreadPool {
             handler.post(runnable);
         }
     }
+
+    @Override
+    public boolean isMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
+    }
 }

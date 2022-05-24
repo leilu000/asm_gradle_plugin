@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.7">
-      <module name="ASM_GRADLE_PLUGIN.app" target="1.8" />
-      <module name="ASM_GRADLE_PLUGIN.plugins.base" target="1.8" />
-      <module name="ASM_GRADLE_PLUGIN.plugins.method_hook_plugin.method_hook" target="1.8" />
-      <module name="ASM_GRADLE_PLUGIN.plugins.thread_schedule.thread_schedule_plugin" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

@@ -34,7 +34,7 @@ public class ThreadScheduleProxyClass {
         mSourceClassName = sourceClassName;
         mMethodInfo = methodInfo;
         mPackageName = sourceClassName.substring(0, sourceClassName.lastIndexOf("/"));
-        mProxyClassName = mPackageName + "/" + "ProxyClass_" + mMethodInfo.name;
+        mProxyClassName = mPackageName + "/" + "ProxyClass_" + mMethodInfo.name + "_" + System.currentTimeMillis();
         String desc = methodInfo.desc;
         if (methodInfo.isStatic) {
             mInitMethodDesc = desc.substring(0, desc.lastIndexOf(")") + 1) + "V";

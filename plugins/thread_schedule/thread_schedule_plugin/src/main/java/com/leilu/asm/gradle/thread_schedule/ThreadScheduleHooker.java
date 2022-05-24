@@ -4,6 +4,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
+import java.awt.SystemTray;
 import java.io.File;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class ThreadScheduleHooker implements IHook.OnHookMethodWithAnnotationLis
     private void clearMethodAndCreateNewBody(ThreadScheduleProxyClass.ProxyClassInfo proxyClassInfo, ClassNode cn
             , MethodInfo newMethodInfo, MethodNode mn) {
         // 保存生成的代理类
-        String proxyClassPath = mDestDirPath + File.separator + proxyClassInfo.simpleClassName;
+        String proxyClassPath = mDestDirPath + File.separator + proxyClassInfo.simpleClassName + ".class";
         ASMUtil.saveClassData(proxyClassInfo.data, proxyClassPath);
         // 删除原来的方法
         cn.methods.remove(mn);

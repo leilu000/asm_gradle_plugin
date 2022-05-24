@@ -6,4 +6,5 @@ public interface IThreadPool {
 
     void runOnMainThread(long delay, Runnable runnable);
 
+    boolean isMainThread();
 }

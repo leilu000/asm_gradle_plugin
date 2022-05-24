@@ -13,6 +13,7 @@ android {
         targetSdkVersion rootProject.ext.config.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled false
     }
 
     buildTypes {
@@ -42,6 +43,6 @@ dependencies {
     implementation rootProject.ext.google.appcompat
     implementation rootProject.ext.google.material
     implementation rootProject.ext.google.constraintlayout
-
-    //implementation project(":plugins:thread_schedule:libthread_schedule")
+    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation project(":plugins:thread_schedule:libthread_schedule")
 }

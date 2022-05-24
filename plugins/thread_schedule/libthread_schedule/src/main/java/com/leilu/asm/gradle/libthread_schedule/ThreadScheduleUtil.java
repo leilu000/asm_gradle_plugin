@@ -48,4 +48,9 @@ public class ThreadScheduleUtil implements IThreadPool {
         }
         mThreadPool.runOnMainThread(delay, runnable);
     }
+
+    @Override
+    public boolean isMainThread() {
+        return mThreadPool.isMainThread();
+    }
 }

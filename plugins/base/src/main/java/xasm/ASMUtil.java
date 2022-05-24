@@ -533,7 +533,7 @@ public class ASMUtil {
             fos.flush();
             fos.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             closeIO(fos);
         }

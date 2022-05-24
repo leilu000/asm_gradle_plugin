@@ -3,6 +3,8 @@ package com.leilu.asm.gradle.thread_schedule;
 import com.android.build.api.transform.Status;
 import com.leilu.base.BasePlugin;
 
+import org.objectweb.asm.Opcodes;
+
 import xasm.XASM;
 
 public class ThreadSchedulePlugin extends BasePlugin<ThreadSchedule> {

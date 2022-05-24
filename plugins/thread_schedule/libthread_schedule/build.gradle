@@ -2,17 +2,30 @@ plugins {
     id 'com.android.library'
 }
 
+
 apply from: "${rootDir}/config.gradle"
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion
     buildToolsVersion rootProject.ext.config.buildToolsVersion
+
     defaultConfig {
         minSdkVersion rootProject.ext.config.minSdkVersion
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+dependencies {
+
+
 }
