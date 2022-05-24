@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             println("lambda表达式 实现的 onClick")
         }
         findViewById<Button>(R.id.btn2).setOnClickListener(this)
-        findViewById<Button>(R.id.btn3).setOnClickListener(this)
+        findViewById<Button>(R.id.btn3).setOnClickListener(listener)
     }
 
     @BGThread
@@ -22,13 +22,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         println("复写OnClickListener 实现的 onClick:${Thread.currentThread().name}")
     }
 
-//    val listener = object : View.OnClickListener {
-//
-//        @BGThread
-//        override fun onClick(v: View?) {
-//            println("匿名内部类 实现的 onClick:${Thread.currentThread().name}")
-//        }
-//    }
+    val listener = object : View.OnClickListener {
+
+        @BGThread
+        override fun onClick(v: View?) {
+            println("匿名内部类 实现的 onClick:${Thread.currentThread().name}")
+        }
+    }
 
 
 }

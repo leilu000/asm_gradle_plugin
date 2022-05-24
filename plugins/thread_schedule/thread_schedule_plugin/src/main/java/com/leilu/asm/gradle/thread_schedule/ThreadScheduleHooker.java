@@ -43,6 +43,10 @@ public class ThreadScheduleHooker implements IHook.OnHookMethodWithAnnotationLis
     @Override
     public InsnList onMethodStart(ClassNode cn, MethodNode mn, MethodInfo methodInfo) {
         mClassName = cn.name;
+        // 为了防止hook的匿名内部类生成的class对象类型错误
+        // 但本菜鸡还有没有搞清楚ASM是怎么生成匿名内部类的，所以这里通过取巧的方法获取匿名内部类的外部类
+        mClassName = mClassName.substring(0, mClassName.indexOf("$"));
+
         AnnotationInfo bgThread = getAnnotationInfo(Const.CLASS_NAME_BG_THREAD, methodInfo.annotationMap);
         AnnotationInfo mainThread = getAnnotationInfo(Const.CLASS_NAME_MAIN_THREAD, methodInfo.annotationMap);
         // 如果方法同时出现BGThread和MainThread两个注解，则抛出异常
