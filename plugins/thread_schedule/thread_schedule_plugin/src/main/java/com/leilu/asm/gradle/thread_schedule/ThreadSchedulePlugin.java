@@ -3,13 +3,13 @@ package com.leilu.asm.gradle.thread_schedule;
 import com.android.build.api.transform.Status;
 import com.leilu.base.BasePlugin;
 
-import org.objectweb.asm.Opcodes;
-
 import xasm.XASM;
 
 public class ThreadSchedulePlugin extends BasePlugin<ThreadSchedule> {
+
+
     @Override
-    protected byte[] modifyClass(String destDirPath, byte[] classData, Status status) {
+    protected byte[] modifyClass(String fileName, String destDirPath, byte[] classData, Status status) {
         return XASM.getInstance()
                 .modifyClass(classData)
                 // hook BGThread和MainThread这两个注解

@@ -43,7 +43,7 @@ public class FileUtil {
             fos.flush();
             fos.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             closeIO(fos);
         }
@@ -145,7 +145,7 @@ public class FileUtil {
             }
             os.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             closeIO(os);
             closeIO(is);

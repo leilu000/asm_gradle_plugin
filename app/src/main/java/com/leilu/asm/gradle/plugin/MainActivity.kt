@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import com.leilu.asm.gradle.libthread_schedule.annotations.BGThread
+import com.leilu.asm.gradle.libthread_schedule.annotations.MainThread
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val listener = object : View.OnClickListener {
 
-        @BGThread
+        @MainThread(delay = 5000)
         override fun onClick(v: View?) {
             println("匿名内部类 实现的 onClick:${Thread.currentThread().name}")
         }

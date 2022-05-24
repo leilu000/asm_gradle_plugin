@@ -107,7 +107,7 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
                             if (mExtension.enable && validateClass(jarEntry.getName())) {
                                 printMsg("********************** module name:" + mModuleName
                                         + "  modify jar class:" + jarEntry.getName() + "  status:" + status);
-                                jos.write(modifyClass(null, srcData, status));
+                                jos.write(modifyClass(jarEntry.getName(), null, srcData, status));
                             } else {
                                 jos.write(srcData);
                             }
@@ -147,7 +147,9 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
                             printMsg("###################### module name:" + mModuleName
                                     + "  modify dir class:" + file.getName() + "  status:" + status);
                             byte[] srcData = FileUtil.readFile(srcPath);
-                            byte[] classData = modifyClass(destDir.getAbsolutePath(), srcData, status);
+                            byte[] classData = modifyClass(file.getName(), destDir.getAbsolutePath(), srcData, status);
+
+
                             FileUtil.saveFile(classData, destPath);
                         } else {
                             FileUtil.copyFile(file, destPath);
@@ -172,12 +174,13 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
     /**
      * 修改类的字节码
      *
+     * @param fileName  文件名
      * @param destDir   保存的类的目标文件夹
      * @param classData 源字节码数据
      * @param status
      * @return
      */
-    protected abstract byte[] modifyClass(String destDir, byte[] classData, Status status);
+    protected abstract byte[] modifyClass(String fileName, String destDir, byte[] classData, Status status);
 
     protected void printMsg(String msg) {
         if (mExtension != null && mExtension.showLog) {

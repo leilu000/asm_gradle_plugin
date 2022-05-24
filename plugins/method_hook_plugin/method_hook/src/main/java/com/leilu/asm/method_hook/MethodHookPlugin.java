@@ -22,7 +22,7 @@ import java.io.PrintStream;
 public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
 
     @Override
-    protected byte[] modifyClass(String destDirPath, byte[] classData, Status status) {
+    protected byte[] modifyClass(String filename, String destDirPath, byte[] classData, Status status) {
         return XASM.getInstance()
                 .modifyClass(classData)
                 .hookMethod("onClick"
