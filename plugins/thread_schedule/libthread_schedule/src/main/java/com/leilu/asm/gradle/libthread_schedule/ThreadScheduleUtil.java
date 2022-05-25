@@ -1,6 +1,5 @@
 package com.leilu.asm.gradle.libthread_schedule;
 
-import android.os.Looper;
 
 import com.leilu.asm.gradle.libthread_schedule.impl.ThreadPool;
 import com.leilu.asm.gradle.libthread_schedule.inter.IThreadPool;
@@ -33,19 +32,11 @@ public class ThreadScheduleUtil implements IThreadPool {
 
     @Override
     public void runOnBGThread(long delay, Runnable runnable) {
-        if (Looper.getMainLooper() != Looper.myLooper() && delay <= 0) {
-            runnable.run();
-            return;
-        }
         mThreadPool.runOnBGThread(delay, runnable);
     }
 
     @Override
     public void runOnMainThread(long delay, Runnable runnable) {
-        if (Looper.getMainLooper() == Looper.myLooper() && delay <= 0) {
-            runnable.run();
-            return;
-        }
         mThreadPool.runOnMainThread(delay, runnable);
     }
 

@@ -46,4 +46,5 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation project(":plugins:thread_schedule:libthread_schedule")
     implementation project(":moudles:login")
+    implementation project(":moudles:testjava")
 }

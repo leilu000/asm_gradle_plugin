@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import com.leilu.asm.gradle.libthread_schedule.ThreadScheduleUtil
 import com.leilu.asm.gradle.libthread_schedule.annotations.BGThread
 import com.leilu.asm.gradle.libthread_schedule.annotations.MainThread
 import com.leilu.asm.gradle.login.LoginActivity
+import com.leilu.asm.gradle.testjava.MyClass
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.i("==", Test.staticTest("sunny", 5))
 
         startActivity(Intent(this, LoginActivity::class.java))
+
+        MyClass("").invokeTestMethod(MyClass("sunny"))
+
     }
 
     @BGThread

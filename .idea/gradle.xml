@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/moudles" />
             <option value="$PROJECT_DIR$/moudles/app" />
             <option value="$PROJECT_DIR$/moudles/login" />
+            <option value="$PROJECT_DIR$/moudles/testjava" />
             <option value="$PROJECT_DIR$/plugins" />
             <option value="$PROJECT_DIR$/plugins/base" />
             <option value="$PROJECT_DIR$/plugins/method_hook_plugin" />
