@@ -1,5 +1,7 @@
 package com.leilu.asm.gradle.thread_schedule;
 
+import com.leilu.base.FileUtil;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
@@ -7,6 +9,8 @@ import org.objectweb.asm.tree.*;
 import java.awt.SystemTray;
 import java.io.File;
 import java.util.Map;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 import xasm.ASMUtil;
 import xasm.base.impl.modify.bean.MethodInfo;
@@ -21,10 +25,17 @@ public class ThreadScheduleHooker implements IHook.OnHookMethodWithAnnotationLis
     private String mClassName;
     private int mTryCountDownLatchInstanceStoreIndex;
     private String mDestDirPath;
+    private JarOutputStream mJarOutputStream;
 
-    public ThreadScheduleHooker(String destDir, ThreadSchedule schedule) {
-        mThreadSchedule = schedule;
+    /**
+     * @param destDir  如果是DirectoryInput目录下的class，则次参数不为空；相反，jos参数为空
+     * @param jos      如果是JarInput目录下的class，则次参数不为空；相反，destDir为空
+     * @param schedule
+     */
+    public ThreadScheduleHooker(String destDir, JarOutputStream jos, ThreadSchedule schedule) {
         mDestDirPath = destDir;
+        mJarOutputStream = jos;
+        mThreadSchedule = schedule;
     }
 
     private AnnotationInfo getAnnotationInfo(String key, Map<String, Map<String, Object>> annotationMap) {
@@ -64,6 +75,18 @@ public class ThreadScheduleHooker implements IHook.OnHookMethodWithAnnotationLis
         return null;
     }
 
+    private void saveProxyClass(ThreadScheduleProxyClass.ProxyClassInfo info) {
+        // 如果属于DirectoryInput的class，则将生成的代理类保存到和被hook的class的相同目录下
+        // 如果属于JarInput的class，则将生成的代理类保存到被hook的class的JarFile里面
+        if (mDestDirPath != null) {
+            String proxyClassPath = mDestDirPath + File.separator + info.simpleClassName + ".class";
+            ASMUtil.saveClassData(info.data, proxyClassPath);
+        } else {
+            String proxyClassName = info.className + ".class";
+            FileUtil.addClassToJarFile(mJarOutputStream, proxyClassName, info.data);
+        }
+    }
+
     /**
      * 删除当前方法，并创建一个一模一样的，然后再在新方法中写入线程调度逻辑
      *
@@ -75,8 +98,7 @@ public class ThreadScheduleHooker implements IHook.OnHookMethodWithAnnotationLis
     private void clearMethodAndCreateNewBody(ThreadScheduleProxyClass.ProxyClassInfo proxyClassInfo, ClassNode cn
             , MethodInfo newMethodInfo, MethodNode mn) {
         // 保存生成的代理类
-        String proxyClassPath = mDestDirPath + File.separator + proxyClassInfo.simpleClassName + ".class";
-        ASMUtil.saveClassData(proxyClassInfo.data, proxyClassPath);
+        saveProxyClass(proxyClassInfo);
         // 删除原来的方法
         cn.methods.remove(mn);
         // 重新创建一个同名同签名的方法

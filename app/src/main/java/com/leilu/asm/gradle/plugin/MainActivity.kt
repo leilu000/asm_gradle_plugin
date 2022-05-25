@@ -1,5 +1,6 @@
 package com.leilu.asm.gradle.plugin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import com.leilu.asm.gradle.libthread_schedule.annotations.BGThread
 import com.leilu.asm.gradle.libthread_schedule.annotations.MainThread
+import com.leilu.asm.gradle.login.LoginActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         test.testInnerClass()
         Test.staticTest(5)
         Log.i("==", Test.staticTest("sunny", 5))
+
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 
     @BGThread

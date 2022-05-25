@@ -18,13 +18,24 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.PrintStream;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
 
     @Override
-    protected byte[] modifyClass(String filename, String destDirPath, byte[] classData, Status status) {
+    protected byte[] modifyJarInputClass(String className, JarOutputStream jos, byte[] sourceData, Status status) {
+        return modifyClass(className, null, jos, sourceData, status);
+    }
+
+    @Override
+    protected byte[] modifyDirectorInputClass(String className, String destDir, byte[] sourceData, Status status) {
+        return modifyClass(className, destDir, null, sourceData, status);
+    }
+
+    private byte[] modifyClass(String className, String descDir, JarOutputStream jos, byte[] sourceData, Status status) {
         return XASM.getInstance()
-                .modifyClass(classData)
+                .modifyClass(sourceData)
                 .hookMethod("onClick"
                         , "(Landroid/view/View;)V"
                         , "android/view/View$OnClickListener"
@@ -45,6 +56,7 @@ public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
                             }
                         })
                 .toByteArray();
+
     }
 
     private InsnList createInsnList(String msg) {

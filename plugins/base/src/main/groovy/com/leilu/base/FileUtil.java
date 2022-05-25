@@ -10,8 +10,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 public class FileUtil {
+
+    public static void addClassToJarFile(JarOutputStream jos, String className, byte[] classData) {
+        JarEntry jarEntry = new JarEntry(className);
+        try {
+            jos.putNextEntry(jarEntry);
+            jos.write(classData);
+            jos.flush();
+            jos.closeEntry();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static byte[] readData(InputStream is) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -65,8 +65,9 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
     public void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         long startTime = System.currentTimeMillis();
         mIsIncremental = transformInvocation.isIncremental();
-        printMsg("start module: " + mModuleName + " ----------- transform name:" + getName());
-        printMsg("start module: " + mModuleName + " ----------- isIncremental = " + mIsIncremental);
+        printMsg("开始解析模块: " + mModuleName
+                + " transform name:" + getName()
+                + " 是否增量更新:" + mIsIncremental);
         mOutputProvider = transformInvocation.getOutputProvider();
         if (!mIsIncremental) {
             mOutputProvider.deleteAll();
@@ -76,8 +77,8 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
             transformInput.getDirectoryInputs().forEach(this::forEachDirectoryInput);
         });
         mExecuter.waitForAllTasks();
-        printMsg("end module: " + mModuleName + " ----------- " + getName()
-                + "   cost time:" + (System.currentTimeMillis() - startTime));
+        printMsg("解析" + mModuleName + "完成,transform name:" + getName()
+                + "  耗时:" + (System.currentTimeMillis() - startTime));
     }
 
     private void forEachJarInput(JarInput jarInput) {
@@ -102,15 +103,15 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
                         Enumeration<JarEntry> entries = jarFile.entries();
                         while (entries.hasMoreElements()) {
                             JarEntry jarEntry = entries.nextElement();
-                            jos.putNextEntry(new JarEntry(jarEntry.getName()));
+
                             byte[] srcData = FileUtil.readData(jarFile.getInputStream(jarEntry));
                             if (mExtension.enable && validateClass(jarEntry.getName())) {
-                                printMsg("********************** module name:" + mModuleName
-                                        + "  modify jar class:" + jarEntry.getName() + "  status:" + status);
-                                jos.write(modifyClass(jarEntry.getName(), null, srcData, status));
-                            } else {
-                                jos.write(srcData);
+                                printMsg("修改属于JarInput的类，当前module:" + mModuleName
+                                        + "  类名:" + jarEntry.getName() + "  状态:" + status);
+                                srcData = modifyJarInputClass(jarEntry.getName(), jos, srcData, status);
                             }
+                            jos.putNextEntry(new JarEntry(jarEntry.getName()));
+                            jos.write(srcData);
                             jos.flush();
                             jos.closeEntry();
                         }
@@ -144,12 +145,11 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
                     String destPath = destDir.getAbsolutePath() + File.separator + file.getName();
                     mExecuter.execute(() -> {
                         if (mExtension.enable && validateClass(file.getName())) {
-                            printMsg("###################### module name:" + mModuleName
-                                    + "  modify dir class:" + file.getName() + "  status:" + status);
+                            printMsg("修改属于DirectoryInput的类，所在module:" + mModuleName
+                                    + "  类名:" + file.getName() + "  状态:" + status);
                             byte[] srcData = FileUtil.readFile(srcPath);
-                            byte[] classData = modifyClass(file.getName(), destDir.getAbsolutePath(), srcData, status);
-
-
+                            byte[] classData = modifyDirectorInputClass(file.getName()
+                                    , destDir.getAbsolutePath(), srcData, status);
                             FileUtil.saveFile(classData, destPath);
                         } else {
                             FileUtil.copyFile(file, destPath);
@@ -171,16 +171,28 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
         }
     }
 
+
     /**
-     * 修改类的字节码
+     * 修改 JarInput下的class
      *
-     * @param fileName  文件名
-     * @param destDir   保存的类的目标文件夹
-     * @param classData 源字节码数据
-     * @param status
+     * @param className  类名
+     * @param jos        该class所在的jar包的输入流，如果有新增的class，需要将新增的class写入此流
+     * @param sourceData 源字节码数据
+     * @param status     状态
      * @return
      */
-    protected abstract byte[] modifyClass(String fileName, String destDir, byte[] classData, Status status);
+    protected abstract byte[] modifyJarInputClass(String className, JarOutputStream jos, byte[] sourceData, Status status);
+
+    /**
+     * 修改 DirectoryInput目录下的class
+     *
+     * @param className  类名
+     * @param destDir    保存的类的目标文件夹
+     * @param sourceData 源字节码数据
+     * @param status     状态
+     * @return
+     */
+    protected abstract byte[] modifyDirectorInputClass(String className, String destDir, byte[] sourceData, Status status);
 
     protected void printMsg(String msg) {
         if (mExtension != null && mExtension.showLog) {

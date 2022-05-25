@@ -1,19 +1,15 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-//apply plugin: 'method_hook.plugin'
-apply plugin: 'thread_schedule.plugin'
+plugins {
+    id 'com.android.library'
+}
+
+apply from: "${rootDir}/config.gradle"
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion
     buildToolsVersion rootProject.ext.config.buildToolsVersion
+
     defaultConfig {
-        applicationId "com.leilu.asm.gradle.plugin"
         minSdkVersion rootProject.ext.config.minSdkVersion
-        targetSdkVersion rootProject.ext.config.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled false
     }
 
     buildTypes {
@@ -26,15 +22,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    kapt {
-        arguments {
-//            arg("name", "sunny")
-//            arg("age", "18")
-        }
-    }
+}
+
+dependencies {
+
+
 }
 
 dependencies {
@@ -43,7 +35,5 @@ dependencies {
     implementation rootProject.ext.google.appcompat
     implementation rootProject.ext.google.material
     implementation rootProject.ext.google.constraintlayout
-    implementation 'androidx.multidex:multidex:2.0.0'
     implementation project(":plugins:thread_schedule:libthread_schedule")
-    implementation project(":moudles:login")
 }
