@@ -86,8 +86,14 @@ public class HookImpl implements IHook {
 
     @Override
     public byte[] startHook(byte[] sourceData) {
-        byte[] result = hook(sourceData, cn -> hookAnnotation(cn, cn.methods));
-        return hook(result, cn -> hookMethod(cn, cn.methods));
+        byte[] result = sourceData;
+        if (mPaddingHookAnnotationList.size() > 0) {
+            result = hook(sourceData, cn -> hookAnnotation(cn, cn.methods));
+        }
+        if (mPaddingHookMethodList.size() > 0) {
+            result = hook(result, cn -> hookMethod(cn, cn.methods));
+        }
+        return result;
     }
 
     private byte[] hook(byte[] sourceData, Consumer<ClassNode> consumer) {
