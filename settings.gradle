@@ -1,7 +1,8 @@
 rootProject.name = "ASM_GRADLE_PLUGIN"
-include ':app'
+include ':moudles:app'
+include ':moudles:login'
 include ':plugins:base'
 include ':plugins:method_hook_plugin:method_hook'
 include ':plugins:thread_schedule:thread_schedule_plugin'
 include ':plugins:thread_schedule:libthread_schedule'
-include ':moudles:login'
+

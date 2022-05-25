@@ -11,8 +11,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/moudles" />
+            <option value="$PROJECT_DIR$/moudles/app" />
             <option value="$PROJECT_DIR$/moudles/login" />
             <option value="$PROJECT_DIR$/plugins" />
             <option value="$PROJECT_DIR$/plugins/base" />
