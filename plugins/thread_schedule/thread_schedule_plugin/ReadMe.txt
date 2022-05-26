@@ -7,9 +7,16 @@
 
 3、配置项目根目录下的build.gradle文件：
     在buildscript代码块的dependencies代码块中配置如下：
-        classpath "com.leilu.asm.plugins:base:${asm_plugin_version}"
-        classpath "com.leilu.asm.plugins:thread_schedule_plugin:${asm_plugin_version}"
-    其中asm_plugin_version为在gradle.properties中配置的版本号，目前项目写的是1.0.0
+        repositories {
+            maven {
+                url uri("${rootDir}/plugins/repos")
+            }
+        }
+        dependencies {
+            classpath "com.leilu.asm.plugins:base:${asm_plugin_version}"
+            classpath "com.leilu.asm.plugins:thread_schedule_plugin:${asm_plugin_version}"
+        }
+        其中asm_plugin_version为在gradle.properties中配置的版本号，目前项目写的是1.0.0
 
 4、在app模块的build.gradle配置如下：
     apply plugin: 'thread_schedule.plugin'
