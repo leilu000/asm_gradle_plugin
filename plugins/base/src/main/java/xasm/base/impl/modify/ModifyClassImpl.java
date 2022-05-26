@@ -88,105 +88,110 @@ public class ModifyClassImpl implements IModifyClass {
 
     @Override
     public byte[] toByteArray() {
-        ClassReader cr = new ClassReader(mClassData);
-        ClassVisitor classVisitor = new ClassVisitor(Const.ASM_VERSION, mClassWriter) {
+        try {
+            ClassReader cr = new ClassReader(mClassData);
+            ClassVisitor classVisitor = new ClassVisitor(Const.ASM_VERSION, mClassWriter) {
 
-            @Override
-            public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-                // 这里遍历一下将要添加的属性是否已经在类中存在，如果存在，则添加到删除列表中删除旧的，等再visitEnd方法中添加新的
-                if (mPaddingAddFieldList.contains(new AddFieldData(access, name, descriptor))) {
-                    mPaddingRemoveFieldList.add(new ModifyData(name, descriptor));
-                }
-                // 这里先判断是否需要删除属性，如果是，则直接返回空，就没有必要再走下面的逻辑了
-                if (mPaddingRemoveFieldList.contains(new ModifyData(name, descriptor))) {
-                    return null;
-                }
-                createFieldAnnotationHelper();
-                return new ModifyFieldVisitor(name, super.visitField(access, name, descriptor, signature, value)
-                        , mFieldAnnotationHelper);
-            }
-
-            @Override
-            public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-                // 判断如果类上已经存在了相同的注解，则删除旧的，添加新的
-                if (mPaddingAddClassAnnotations != null) {
-                    for (Map.Entry<String, Map<String, Object>> entry : mPaddingAddClassAnnotations.entrySet()) {
-                        if (entry.getKey().equals(descriptor)) {
-                            mPaddingRemoveClassAnnotations.add(entry.getKey());
-                        }
+                @Override
+                public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
+                    // 这里遍历一下将要添加的属性是否已经在类中存在，如果存在，则添加到删除列表中删除旧的，等再visitEnd方法中添加新的
+                    if (mPaddingAddFieldList.contains(new AddFieldData(access, name, descriptor))) {
+                        mPaddingRemoveFieldList.add(new ModifyData(name, descriptor));
                     }
-                }
-
-                for (String desc : mPaddingRemoveClassAnnotations) {
-                    if (desc.equals(descriptor)) {
+                    // 这里先判断是否需要删除属性，如果是，则直接返回空，就没有必要再走下面的逻辑了
+                    if (mPaddingRemoveFieldList.contains(new ModifyData(name, descriptor))) {
                         return null;
                     }
-                }
-                return super.visitAnnotation(descriptor, visible);
-            }
-
-            @Override
-            public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                // 检查方法合法性
-                // ASMUtil.throwExceptionIfAbsOrNativeMethod(name, access);
-
-                // 这里遍历一下将要添加的方法是否已经在类中存在，如果存在，则添加到删除列表中删除旧的，等再visitEnd方法中添加新的
-                if (mPaddingAddMethodList.contains(new AddMethodData(access, name, descriptor))) {
-                    mPaddingRemoveMethodList.add(new ModifyData(name, descriptor));
+                    createFieldAnnotationHelper();
+                    return new ModifyFieldVisitor(name, super.visitField(access, name, descriptor, signature, value)
+                            , mFieldAnnotationHelper);
                 }
 
-                // 这里先判断是否需要删除方法，如果是，则直接返回空，就没有必要再走下面的逻辑了
-                if (mPaddingRemoveMethodList.contains(new ModifyData(name, descriptor))) {
-                    return null;
-                }
-                createMethodAnnotationHelper();
-                return new ModifyMethodVisitor(name, descriptor, super.visitMethod(access, name, descriptor, signature, exceptions)
-                        , mMethodAnnotationHelper);
-
-            }
-
-            private void addAnnotation(Object visitor, Map<String, Map<String, Object>> map) {
-                if (map != null) {
-                    ASMUtil.addAnnotations(visitor, new IAddField.OnAddFiledListener() {
-                        @Override
-                        public Map<String, Map<String, Object>> getAnnotationsKeyValue() {
-                            return map;
+                @Override
+                public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                    // 判断如果类上已经存在了相同的注解，则删除旧的，添加新的
+                    if (mPaddingAddClassAnnotations != null) {
+                        for (Map.Entry<String, Map<String, Object>> entry : mPaddingAddClassAnnotations.entrySet()) {
+                            if (entry.getKey().equals(descriptor)) {
+                                mPaddingRemoveClassAnnotations.add(entry.getKey());
+                            }
                         }
-                    }, new IAddAnnotation.OnStartAddAnnotationListener() {
-                        @Override
-                        public void onStartAddAnnotation(String annotationDescriber) {
+                    }
+
+                    for (String desc : mPaddingRemoveClassAnnotations) {
+                        if (desc.equals(descriptor)) {
+                            return null;
                         }
-                    });
+                    }
+                    return super.visitAnnotation(descriptor, visible);
                 }
+
+                @Override
+                public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                    // 检查方法合法性
+                    // ASMUtil.throwExceptionIfAbsOrNativeMethod(name, access);
+
+                    // 这里遍历一下将要添加的方法是否已经在类中存在，如果存在，则添加到删除列表中删除旧的，等再visitEnd方法中添加新的
+                    if (mPaddingAddMethodList.contains(new AddMethodData(access, name, descriptor))) {
+                        mPaddingRemoveMethodList.add(new ModifyData(name, descriptor));
+                    }
+
+                    // 这里先判断是否需要删除方法，如果是，则直接返回空，就没有必要再走下面的逻辑了
+                    if (mPaddingRemoveMethodList.contains(new ModifyData(name, descriptor))) {
+                        return null;
+                    }
+                    createMethodAnnotationHelper();
+                    return new ModifyMethodVisitor(name, descriptor, super.visitMethod(access, name, descriptor, signature, exceptions)
+                            , mMethodAnnotationHelper);
+
+                }
+
+                private void addAnnotation(Object visitor, Map<String, Map<String, Object>> map) {
+                    if (map != null) {
+                        ASMUtil.addAnnotations(visitor, new IAddField.OnAddFiledListener() {
+                            @Override
+                            public Map<String, Map<String, Object>> getAnnotationsKeyValue() {
+                                return map;
+                            }
+                        }, new IAddAnnotation.OnStartAddAnnotationListener() {
+                            @Override
+                            public void onStartAddAnnotation(String annotationDescriber) {
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void visitEnd() {
+                    // 添加类级别的注解
+                    addAnnotation(mClassWriter, mPaddingAddClassAnnotations);
+                    // 添加新的属性
+                    for (AddFieldData data : mPaddingAddFieldList) {
+                        mAddField.addField(data.access, data.name, data.describer, data.defaultValue, data.listener);
+                    }
+                    // 添加批量属性
+                    for (PatchAddFieldData data : mPaddingPatchAddFieldList) {
+                        mAddField.addFields(data.access, data.varPrefix, data.types);
+                    }
+                    // 添加新的方法
+                    for (AddMethodData data : mPaddingAddMethodList) {
+                        mAddMethod.addMethod(data.access, data.name, data.desc, data.exceptions, data.listener);
+                    }
+                    super.visitEnd();
+                }
+            };
+
+            cr.accept(classVisitor, ClassReader.SKIP_DEBUG);
+
+            // 对需要的方法进行hook
+            if (mHook != null) {
+                return mHook.startHook(mClassWriter.toByteArray());
             }
-
-            @Override
-            public void visitEnd() {
-                // 添加类级别的注解
-                addAnnotation(mClassWriter, mPaddingAddClassAnnotations);
-                // 添加新的属性
-                for (AddFieldData data : mPaddingAddFieldList) {
-                    mAddField.addField(data.access, data.name, data.describer, data.defaultValue, data.listener);
-                }
-                // 添加批量属性
-                for (PatchAddFieldData data : mPaddingPatchAddFieldList) {
-                    mAddField.addFields(data.access, data.varPrefix, data.types);
-                }
-                // 添加新的方法
-                for (AddMethodData data : mPaddingAddMethodList) {
-                    mAddMethod.addMethod(data.access, data.name, data.desc, data.exceptions, data.listener);
-                }
-                super.visitEnd();
-            }
-        };
-
-        cr.accept(classVisitor, ClassReader.SKIP_DEBUG);
-
-        // 对需要的方法进行hook
-        if (mHook != null) {
-            return mHook.startHook(mClassWriter.toByteArray());
+            return mClassWriter.toByteArray();
+        } catch (Exception e) {
+            e.getMessage();
         }
-        return mClassWriter.toByteArray();
+        return mClassData;
     }
 
     @Override
