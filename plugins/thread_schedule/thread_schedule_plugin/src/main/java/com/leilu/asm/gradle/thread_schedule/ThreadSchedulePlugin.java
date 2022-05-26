@@ -26,7 +26,7 @@ public class ThreadSchedulePlugin extends BasePlugin<ThreadSchedule> {
                 // hook BGThread和MainThread这两个注解
                 .hookMethodWidthAnnotation(new String[]{Const.DESC_ANNOTATION_BG_THREAD, Const.DESC_ANNOTATION_MAIN_THREAD}
                         , new ThreadScheduleHooker(destDir, jos, mExtension))
-                .toByteArray();
+                .toByteArray().data;
     }
 
     @Override
