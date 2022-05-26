@@ -2,6 +2,7 @@ package xasm;
 
 import xasm.base.impl.SimpleOnCoreAddMethodListener;
 import xasm.base.impl.modify.ModifyClassImpl;
+import xasm.base.impl.modify.bean.ResultInfo;
 import xasm.base.inter.IAddAnnotation;
 import xasm.base.inter.IAddField;
 import xasm.base.inter.IHook;
@@ -25,7 +26,7 @@ public class ModifyClassWrapper {
         mModifyASM = new ModifyClassImpl(classData);
     }
 
-    public byte[] toByteArray() {
+    public ResultInfo toByteArray() {
         return mModifyASM.toByteArray();
     }
 

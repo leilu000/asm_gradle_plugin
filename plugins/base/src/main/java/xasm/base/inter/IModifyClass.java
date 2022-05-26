@@ -2,6 +2,8 @@ package xasm.base.inter;
 
 import java.util.Map;
 
+import xasm.base.impl.modify.bean.ResultInfo;
+
 /**
  * 修改类
  */
@@ -12,7 +14,7 @@ public interface IModifyClass extends IAddField, IAddMethod, IHook {
      *
      * @return
      */
-    byte[] toByteArray();
+    ResultInfo toByteArray();
 
     /**
      * 删除属性

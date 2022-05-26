@@ -1,6 +1,8 @@
 package xasm.base.inter;
 
 import xasm.base.impl.modify.bean.MethodInfo;
+import xasm.base.impl.modify.bean.ResultInfo;
+
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
@@ -124,7 +126,7 @@ public interface IHook {
      * @param sourceData
      * @return hook以后的内容
      */
-    byte[] startHook(byte[] sourceData);
+    ResultInfo startHook(byte[] sourceData);
 
 
 }

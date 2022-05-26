@@ -55,7 +55,7 @@ public class MethodHookPlugin extends BasePlugin<MethodHookConfig> {
                                 return createInsnList(mn.name + "方法结束");
                             }
                         })
-                .toByteArray();
+                .toByteArray().data;
 
     }
 

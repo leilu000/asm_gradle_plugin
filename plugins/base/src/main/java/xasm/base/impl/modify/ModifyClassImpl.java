@@ -9,6 +9,7 @@ import xasm.base.impl.modify.bean.AddFieldData;
 import xasm.base.impl.modify.bean.AddMethodData;
 import xasm.base.impl.modify.bean.ModifyData;
 import xasm.base.impl.modify.bean.PatchAddFieldData;
+import xasm.base.impl.modify.bean.ResultInfo;
 import xasm.base.impl.modify.field.ModifyFieldVisitor;
 import xasm.base.impl.modify.field.ModifyMethodVisitor;
 import xasm.base.inter.IAddAnnotation;
@@ -87,9 +88,13 @@ public class ModifyClassImpl implements IModifyClass {
 
 
     @Override
-    public byte[] toByteArray() {
+    public ResultInfo toByteArray() {
+        ResultInfo info = new ResultInfo();
+        info.data = mClassData;
+        String className = "";
         try {
             ClassReader cr = new ClassReader(mClassData);
+            className = cr.getClassName();
             ClassVisitor classVisitor = new ClassVisitor(Const.ASM_VERSION, mClassWriter) {
 
                 @Override
@@ -185,13 +190,17 @@ public class ModifyClassImpl implements IModifyClass {
 
             // 对需要的方法进行hook
             if (mHook != null) {
-                return mHook.startHook(mClassWriter.toByteArray());
+                ResultInfo resultInfo = mHook.startHook(mClassWriter.toByteArray());
+                if (resultInfo.modified) {
+                    info.data = resultInfo.data;
+                    info.modified = true;
+                    System.out.println("修改成功:" + className);
+                }
             }
-            return mClassWriter.toByteArray();
         } catch (Exception e) {
-            e.getMessage();
+            System.out.println("hook " + className + " 出现异常异常信息:" + e.getMessage());
         }
-        return mClassData;
+        return info;
     }
 
     @Override
@@ -317,7 +326,7 @@ public class ModifyClassImpl implements IModifyClass {
     }
 
     @Override
-    public byte[] startHook(byte[] sourceData) {
+    public ResultInfo startHook(byte[] sourceData) {
         throw new IllegalStateException("This method is not required here !");
     }
 

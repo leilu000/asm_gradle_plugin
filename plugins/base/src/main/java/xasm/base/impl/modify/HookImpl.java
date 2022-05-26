@@ -7,6 +7,7 @@ import xasm.base.impl.modify.bean.HookMethodData;
 import xasm.base.impl.modify.bean.HookMethodWithAnnotation;
 import xasm.base.impl.modify.bean.MethodInfo;
 import xasm.base.impl.modify.bean.Pair;
+import xasm.base.impl.modify.bean.ResultInfo;
 import xasm.base.inter.IHook;
 
 import org.objectweb.asm.*;
@@ -21,6 +22,7 @@ public class HookImpl implements IHook {
     private final List<HookMethodData> mPaddingHookMethodList = new ArrayList<>();
     // 保存需要hook的注解列表
     private final List<HookMethodWithAnnotation> mPaddingHookAnnotationList = new ArrayList<>();
+    private boolean mRealModified;
 
     @Override
     public void hookMethod(String methodName, Class<?> returnType, Class<?>[] parameterTypes, OnHookMethodListener listener) {
@@ -85,15 +87,22 @@ public class HookImpl implements IHook {
     }
 
     @Override
-    public byte[] startHook(byte[] sourceData) {
-        byte[] result = sourceData;
+    public ResultInfo startHook(byte[] sourceData) {
+        ResultInfo resultInfo = new ResultInfo();
         if (mPaddingHookAnnotationList.size() > 0) {
-            result = hook(sourceData, cn -> hookAnnotation(cn, cn.methods));
+            byte[] data = hook(sourceData, cn -> hookAnnotation(cn, cn.methods));
+            if (mRealModified) {
+                resultInfo.data = data;
+            }
         }
         if (mPaddingHookMethodList.size() > 0) {
-            result = hook(result, cn -> hookMethod(cn, cn.methods));
+            byte[] data = hook(resultInfo.data, cn -> hookMethod(cn, cn.methods));
+            if (mRealModified) {
+                resultInfo.data = data;
+            }
         }
-        return result;
+        resultInfo.modified = mRealModified;
+        return resultInfo;
     }
 
     private byte[] hook(byte[] sourceData, Consumer<ClassNode> consumer) {
@@ -294,6 +303,7 @@ public class HookImpl implements IHook {
                 }
             }
         }
+        mRealModified = true;
     }
 
     private boolean isContainsReturnInsn(InsnList list) {
