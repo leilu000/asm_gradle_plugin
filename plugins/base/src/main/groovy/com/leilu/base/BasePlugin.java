@@ -132,15 +132,15 @@ public abstract class BasePlugin<T extends BaseExtensionInfo> extends Transform 
     }
 
     private void forEachDirectoryInput(DirectoryInput directoryInput) {
+        File destDir = getLocation(directoryInput.getName(), directoryInput.getContentTypes()
+                , directoryInput.getScopes(), Format.DIRECTORY);
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
         BiConsumer<File, Status> biConsumer = (file, status) -> {
-            File destDir = getLocation(file.getName(), directoryInput.getContentTypes()
-                    , directoryInput.getScopes(), Format.DIRECTORY);
             switch (status) {
                 case ADDED:
                 case CHANGED:
-                    if (!destDir.exists()) {
-                        destDir.mkdirs();
-                    }
                     String srcPath = file.getAbsolutePath();
                     String destPath = destDir.getAbsolutePath() + File.separator + file.getName();
                     mExecuter.execute(() -> {
