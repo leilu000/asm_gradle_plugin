@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'method_hook.plugin'
 //apply plugin: 'thread_schedule.plugin'
+apply plugin: 'll_component.plugin'
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion

@@ -16,6 +16,7 @@ buildscript {
         classpath "com.leilu.asm.plugins:base:${asm_plugin_version}"
         classpath "com.leilu.asm.plugins:thread_schedule_plugin:${asm_plugin_version}"
         classpath "com.leilu.asm.plugins:method_hook:${asm_plugin_version}"
+        classpath "com.leilu.asm.plugins:ll_component_plugin:${asm_plugin_version}"
     }
 }
 allprojects {

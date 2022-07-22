@@ -10,17 +10,19 @@ public class LLComponentPlugin extends BasePlugin {
 
     @Override
     protected byte[] modifyJarInputClass(String className, JarOutputStream jos, byte[] sourceData, Status status) {
-        return new byte[0];
+        System.out.println("modifyJarInputClass:" + className + "  status:" + status);
+        return sourceData;
     }
 
     @Override
     protected byte[] modifyDirectorInputClass(String className, String destDir, byte[] sourceData, Status status) {
-        return new byte[0];
+        System.out.println("----------------modifyDirectorInputClass:" + className + "  status:" + status);
+        return sourceData;
     }
 
     @Override
     protected BaseExtensionInfo initSelfDefineExtension() {
-        return null;
+        return new LLComponentExtension();
     }
 
 }
