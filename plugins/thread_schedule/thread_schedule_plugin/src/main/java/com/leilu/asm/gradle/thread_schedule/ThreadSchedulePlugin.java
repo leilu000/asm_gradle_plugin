@@ -3,7 +3,6 @@ package com.leilu.asm.gradle.thread_schedule;
 import com.android.build.api.transform.Status;
 import com.leilu.base.BasePlugin;
 
-import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
 import xasm.XASM;
@@ -24,7 +23,7 @@ public class ThreadSchedulePlugin extends BasePlugin<ThreadSchedule> {
         return XASM.getInstance()
                 .modifyClass(classData)
                 // hook BGThread和MainThread这两个注解
-                .hookMethodWidthAnnotation(new String[]{Const.DESC_ANNOTATION_BG_THREAD, Const.DESC_ANNOTATION_MAIN_THREAD}
+                .hookMethodWithAnnotation(new String[]{Const.DESC_ANNOTATION_BG_THREAD, Const.DESC_ANNOTATION_MAIN_THREAD}
                         , new ThreadScheduleHooker(destDir, jos, mExtension))
                 .toByteArray().data;
     }

@@ -277,13 +277,13 @@ public class ModifyClassWrapper {
      *
      * @return
      */
-    public ModifyClassWrapper hookMethodWidthAnnotation(Class<?>[] annotationClass, IHook.OnHookMethodWithAnnotationListener listener) {
+    public ModifyClassWrapper hookMethodWithAnnotation(Class<?>[] annotationClass, IHook.OnHookMethodWithAnnotationListener listener) {
         int len = annotationClass.length;
         String[] annotationDescriber = new String[len];
         for (int i = 0; i < len; i++) {
             annotationDescriber[i] = ASMUtil.getDescriberByClass(annotationClass[i]);
         }
-        hookMethodWidthAnnotation(annotationDescriber, listener);
+        hookMethodWithAnnotation(annotationDescriber, listener);
         return this;
     }
 
@@ -292,7 +292,7 @@ public class ModifyClassWrapper {
      *
      * @return
      */
-    public ModifyClassWrapper hookMethodWidthAnnotation(String[] annotationDescriber, IHook.OnHookMethodWithAnnotationListener listener) {
+    public ModifyClassWrapper hookMethodWithAnnotation(String[] annotationDescriber, IHook.OnHookMethodWithAnnotationListener listener) {
         if (annotationDescriber == null || annotationDescriber.length == 0) {
             throw new IllegalArgumentException("The annotation is null !");
         }
