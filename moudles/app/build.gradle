@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'method_hook.plugin'
-apply plugin: 'thread_schedule.plugin'
+//apply plugin: 'thread_schedule.plugin'
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion
@@ -47,4 +47,5 @@ dependencies {
     implementation project(":plugins:thread_schedule:libthread_schedule")
     implementation project(":moudles:login")
     implementation project(":moudles:testjava")
+    implementation project(":plugins:component_plugin:libcompoment")
 }

@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import com.leilu.asm.gradle.libcompoment.launchframe.LaunchTaskManager
 import com.leilu.asm.gradle.libthread_schedule.ThreadScheduleUtil
 import com.leilu.asm.gradle.libthread_schedule.annotations.BGThread
 import com.leilu.asm.gradle.libthread_schedule.annotations.MainThread
+import com.leilu.asm.gradle.libthread_schedule.inter.IThreadPool
 import com.leilu.asm.gradle.login.LoginActivity
+import com.leilu.asm.gradle.plugin.launch.*
 import com.leilu.asm.gradle.testjava.MyClass
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -22,23 +25,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<Button>(R.id.btn2).setOnClickListener(this)
         findViewById<Button>(R.id.btn3).setOnClickListener(listener)
 
-        println(getName(100))
+//        println(getName(100))
+//
+//        val test = Test()
+//        Thread {
+//            test.test()
+//        }.start()
+//        Thread {
+//            Log.i("==", test.test("sunny"))
+//        }.start()
+//        test.test("sunny", 5)
+//        test.testInnerClass()
+//        Test.staticTest(5)
+//        Log.i("==", Test.staticTest("sunny", 5))
+//
+//        startActivity(Intent(this, LoginActivity::class.java))
+//
+//        MyClass("").invokeTestMethod(MyClass("sunny"))
 
-        val test = Test()
-        Thread {
-            test.test()
-        }.start()
-        Thread {
-            Log.i("==", test.test("sunny"))
-        }.start()
-        test.test("sunny", 5)
-        test.testInnerClass()
-        Test.staticTest(5)
-        Log.i("==", Test.staticTest("sunny", 5))
-
-        startActivity(Intent(this, LoginActivity::class.java))
-
-        MyClass("").invokeTestMethod(MyClass("sunny"))
+//        LaunchTaskManager().apply {
+//            addTask(A0::class.java)
+//            addTask(B1::class.java)
+//            addTask(C2::class.java)
+//            addTask(D3::class.java)
+//            addTask(E4::class.java)
+//            addTask(F5::class.java)
+//            start()
+//        }
 
     }
 

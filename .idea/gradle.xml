@@ -17,6 +17,8 @@
             <option value="$PROJECT_DIR$/moudles/testjava" />
             <option value="$PROJECT_DIR$/plugins" />
             <option value="$PROJECT_DIR$/plugins/base" />
+            <option value="$PROJECT_DIR$/plugins/component_plugin" />
+            <option value="$PROJECT_DIR$/plugins/component_plugin/libcompoment" />
             <option value="$PROJECT_DIR$/plugins/method_hook_plugin" />
             <option value="$PROJECT_DIR$/plugins/method_hook_plugin/method_hook" />
             <option value="$PROJECT_DIR$/plugins/thread_schedule" />
