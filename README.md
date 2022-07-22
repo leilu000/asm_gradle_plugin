@@ -76,10 +76,40 @@
                                     同时以上两个注解都兼容带有返回值的方法
                                     
             ---component_plugin 基于ASM的组件化框架，一种比ARouter更加轻量的方案
-                libcompoment模块：包含了组件化框架的一些共用注解和任务启动框架
-                                 任务启动框架：一个实现了可以通过依赖关系，并且实现不同线程之间并发运行的任务启动框架，以解决一个应用在启动的时候各个业务的耦合关系，并优化启动速度
-                                             使用方式：
-                                                
+                libcompoment模块：
+                                 1、任务启动框架：一个实现了可以通过依赖关系，并且实现不同线程之间并发运行的任务启动框架，以解决一个应用在启动的时候各个业务的耦合关系，并优化启动速度
+                                             使用案例：
+                                                new LaunchTaskManager()
+                                                        // 添加具体的启动任务
+                                                        .addTask(A0.class)
+                                                        .addTask(B1.class)
+                                                        .addTask(C2.class)
+                                                        .addTask(D3.class)
+                                                        .addTask(E4.class)
+                                                        .addTask(F5.class)
+                                                        // 添加启动监听
+                                                        .addLaunchTaskListener(new ILaunchTaskListener() {
+                                                            @Override
+                                                            public void onTaskStarted(String taskName) {
+                                                                System.out.println("onTaskStarted:" + taskName);
+                                                            }
+                                        
+                                                            @Override
+                                                            public void onTaskCompleted(String taskName) {
+                                                                System.out.println("onTaskCompleted:" + taskName);
+                                                            }
+                                        
+                                                            @Override
+                                                            public void onAllTaskCompleted() {
+                                                                System.out.println("onAllTaskCompleted");
+                                                            }
+                                                        })
+                                                        // 开始运行所有任务
+                                                        .start()
+                                                        // 如果调用次方式，则当前调用的线程会阻塞，直到所有任务运行结束
+                                                        .awaitAllTaskComplete();
+                                2、组件化需要用到的注解
+                ll_component_plugin：组件化的实现模块，通过一些简单注解，来实现轻量化组件化架构
 
             ---method_hook_plugin   可以实现方法拦截，方法开始和结束回调的插件，已经有思路，等后面再实现
 

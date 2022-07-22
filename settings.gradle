@@ -8,3 +8,4 @@ include ':plugins:thread_schedule:libthread_schedule'
 
 include ':moudles:testjava'
 include ':plugins:component_plugin:libcompoment'
+include ':plugins:component_plugin:ll_component_plugin'

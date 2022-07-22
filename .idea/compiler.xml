@@ -5,6 +5,7 @@
       <module name="ASM_GRADLE_PLUGIN.moudles.app" target="1.8" />
       <module name="ASM_GRADLE_PLUGIN.moudles.login" target="1.8" />
       <module name="ASM_GRADLE_PLUGIN.plugins.base" target="1.8" />
+      <module name="ASM_GRADLE_PLUGIN.plugins.component_plugin.ll_component_plugin" target="1.8" />
       <module name="ASM_GRADLE_PLUGIN.plugins.method_hook_plugin.method_hook" target="1.8" />
       <module name="ASM_GRADLE_PLUGIN.plugins.thread_schedule.thread_schedule_plugin" target="1.8" />
     </bytecodeTargetLevel>
