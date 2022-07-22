@@ -6,7 +6,7 @@ import com.leilu.base.BasePlugin;
 
 import java.util.jar.JarOutputStream;
 
-public class LLComponentPlugin extends BasePlugin {
+public class LLComponentPlugin extends BasePlugin<LLComponentExtension> {
 
     @Override
     protected byte[] modifyJarInputClass(String className, JarOutputStream jos, byte[] sourceData, Status status) {
@@ -21,7 +21,7 @@ public class LLComponentPlugin extends BasePlugin {
     }
 
     @Override
-    protected BaseExtensionInfo initSelfDefineExtension() {
+    protected LLComponentExtension initSelfDefineExtension() {
         return new LLComponentExtension();
     }
 
