@@ -89,6 +89,7 @@ public class HookImpl implements IHook {
     @Override
     public ResultInfo startHook(byte[] sourceData) {
         ResultInfo resultInfo = new ResultInfo();
+        resultInfo.data = sourceData;
         if (mPaddingHookAnnotationList.size() > 0) {
             byte[] data = hook(sourceData, cn -> hookAnnotation(cn, cn.methods));
             if (mRealModified) {
@@ -106,6 +107,7 @@ public class HookImpl implements IHook {
     }
 
     private byte[] hook(byte[] sourceData, Consumer<ClassNode> consumer) {
+        mRealModified = false;
         ClassReader cr = new ClassReader(sourceData);
         ClassNode cn = new ClassNode(Const.ASM_VERSION);
         cr.accept(cn, ClassReader.SKIP_DEBUG);
@@ -249,7 +251,7 @@ public class HookImpl implements IHook {
         }
     }
 
-    private void realHook(ClassNode cn, MethodNode mn, IHook.OnHookMethodListener listener) {
+    private void realHook(ClassNode cn, MethodNode mn, OnHookMethodListener listener) {
         // 检查方法合法性
         // ASMUtil.throwExceptionIfAbsOrNativeMethod(mn.name, mn.access);
 
