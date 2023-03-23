@@ -114,32 +114,5 @@
             ---method_hook_plugin   可以实现方法拦截，方法开始和结束回调的插件，已经有思路，等后面再实现
             
             
-            10.Android app file size:
-Total size(include armeabi and arm64-v8a)：6M->60M
-<img width="415" alt="image" src="https://user-images.githubusercontent.com/15362883/227084511-07c7fe2a-7186-40b5-8bea-a31dee7860b4.png">
-
-
-When installed on an Android device, the amount of storage space consumed increases as the number of mini app increases
-<img width="207" alt="image" src="https://user-images.githubusercontent.com/15362883/227084537-459498fe-9143-4e33-95e0-e2a174144186.png">
-
-
-
-11.
-Only luanch native app：119M
-<img width="415" alt="image" src="https://user-images.githubusercontent.com/15362883/227084560-b708facc-3d3d-434c-a3e9-b0d2afd13f8f.png">
-
-
-When luanch native app and Deposits miniapp：218.6M
-<img width="415" alt="image" src="https://user-images.githubusercontent.com/15362883/227084585-2d445d62-d21e-4502-b6dc-eaa50a9dec83.png">
-
-
-After close Deposites miniapp:200M
-<img width="415" alt="image" src="https://user-images.githubusercontent.com/15362883/227084612-dcf3765b-ef6a-4f23-a1bc-14f368c3958c.png">
-
-
-Summarize:
-1.When you open an miniapp, the memory will increase by a constant value, which varies depending on the actual memory usage of the miniapp
-2.Closing miniapp reduces memory by a certain amount, but is higher than opening only native apps
-
 
          
